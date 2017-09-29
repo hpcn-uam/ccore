@@ -47,7 +47,7 @@ pip install -r requirements.txt --upgrade
 
 echo "[ Building C modules ]"
 
-make src
+make ccore
 
 echo "[ Done ]"
 
