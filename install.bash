@@ -49,9 +49,10 @@ echo "[ Building C modules ]"
 
 make ccore
 
-echo "[ Done ]"
+echo "[ Running tests ]"
 
 py.test
 
+echo "[ Done ]"
 echo "Remember to execute 'source activate-env' to activate the virtualenv"
 
