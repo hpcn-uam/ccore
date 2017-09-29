@@ -51,6 +51,72 @@ The elements of the list are actually an internal type that only haves the index
 
 See the *test_cparser.py* test file for examples.
 
+
+Class cparser.RecordList documentation
+-------------------
+
+### method:: __init__(timezone = None, separator = " ")
+
+>  Initializes the recordlist.
+>
+>  :param timezone: If not none, the Pandas timestamps will be created with this timezone.
+>  :param separator: String with the field separator. Defaults to ' ' (space). Note that cparser behaves like awk regarding separator: multiple separators are ignored only when they are spaces or tabs, not when they are other character. 
+>
+> For example, ``hello    world`` is counted as two fields even when there are multiple spaces separating them, but ```hello||world``` with | as separator is counted as three fields.
+
+### method:: read(fpath, field_dict)
+
+> Reads and parses the file, storing the fields in internal C structures.
+>
+>  :param fpath: Path to the file to parse.
+>  :param field_dict: Dictionary with the fields to parse, where the keys are the field names and the values are tuples (column_index, type, [func]). Type is a string containing one of the following types:
+>
+>  * *int*
+>  * *string*
+>  * *double*
+>  * *ip*. The parser reads an IP and converts it to an integer. The Python object returned is the same integer.
+>  * *tstamp*. The parser reads and stores a double value. The returned Python object is a Pandas.Timestamp object.
+>  * *bool*. The parser reads an integer. The Python object returned is a *bool* object (either True or False).
+>
+>  Func is an optional value in the tuple. If present, it should be a function (or a lambda) that receives the word in the column and returns a value of the appropiate type to be stored.
+
+### method:: tstamp_range(start, end, fields)
+
+> Get an iterator that will only return records where at least one of the indicated fields is in the time range start-end.
+>
+> :param start: pandas.Timestamp of the range start.
+> :param end: pandas.Timestamp of the range start.
+> :param fields: List of fields (strings) that should be compared with the start/end times.
+
+### method:: field_as_numpy(field, default_tstamp)
+
+> Return in a Numpy array all the values of 'field' of the records. Especially useful for quick generation of timeseries.
+>
+> :param string field: Name of the field to put in the array.
+> :param pandas.Timestamp default_tstamp: Default timestamp if the field is a timestamp with value 0.
+> :returns: Numpy array.
+
+### method:: filter_fields(value, fields)
+
+> Get an interator that will only show records where at least one of the fields matches the given value.
+>
+> :param value: Value to filter by.
+> :param fields: Fields that will be checked. All of them must be of the same type.
+> :type fields: List of strings
+> :returns: Iterator with the corresponding filters configured.
+
+> .. attribute:: min_timestamp
+>
+> 	Minimum pandas.Timestamp value seen in the parsing. Timestamps values below 0 are ignored.
+>
+> .. attribute:: max_timestamp
+>
+>	Maximum pandas.Timestamp value seen in the parsing, or 0 if no one was found. Timestamps values below 0 are ignored.
+>
+> .. attribute:: tz
+>
+>	Timezone in which the parser is configured in.
+
 How does it work
 ----------------
 
