@@ -35,6 +35,7 @@ typedef enum {
 	IP, 					// Parses an IP, saves an integer
 	TSTAMP,					// Timestamp, saves a long and returns a pandas.Timestamp object
 	BOOL,					// Saves a byte, returns a corresponding Python bool object
+	MAC, 					// Use 64bit integers to save a MAC address
 	RD_TYPES_COUNT 			// Hack to count the number of types.
 } rd_types;
 
@@ -131,4 +132,13 @@ size_t rdtype_storage_size(const struct rd_type* tp);
  */
 #define tsmax(ts1, ts2) ((ts1) < (ts2)? (ts2) : (ts1))
 
+/**
+ * Convert a MAC address string to a number, using fast htoi function.
+ */
+uint64_t mac_addr_to_num_htoi(const char* mac);
+
+/**
+ * Convert a MAC address string to a number, using sscanf (slower but safer).
+ */
+uint64_t mac_addr_to_num_sscanf(const char* mac);
 #endif
