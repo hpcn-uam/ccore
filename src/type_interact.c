@@ -2,6 +2,7 @@
 #include <string.h>
 #include <arpa/inet.h>
 #include <Python.h>
+#include <stdlib.h>
 
 #include "type_interact.h"
 
@@ -124,6 +125,48 @@ static void read_unixtstamp(const char* word, uint64_t* dest)
 	}
 }
 
+// Fast conversion hex -> int
+// https://stackoverflow.com/a/34573398/783010
+inline uint64_t htoi(int x) {
+    return 9 * (x >> 6) + (x & 017);
+}
+
+uint64_t mac_addr_to_num_htoi(const char* mac) {
+	uint64_t result = 0;
+	size_t shift = 44;
+	size_t i;
+	for (i = 0; i < 17 && mac[i] != '\0'; i++) {
+		if (mac[i] == ':')
+			continue;
+
+		result += htoi(mac[i]) << shift;
+		shift -= 4;
+	}
+
+	return result;
+}
+
+uint64_t mac_addr_to_num_sscanf(const char* mac) {
+	unsigned char a[6];
+	int last = -1;
+	sscanf(mac, "%hhx:%hhx:%hhx:%hhx:%hhx:%hhx%n",
+		a + 0, a + 1, a + 2, a + 3, a + 4, a + 5,
+		&last);
+
+	return
+		((uint64_t)a[0]) << 40 |
+		((uint64_t)a[1]) << 32 |
+		((uint64_t)a[2]) << 24 |
+		((uint64_t)a[3]) << 16 |
+		((uint64_t)a[4]) << 8 |
+		((uint64_t)a[5]);
+}
+
+static void read_mac(const char* word, uint64_t* dest)
+{
+	*dest = mac_addr_to_num_htoi(word); // htoi is faster
+}
+
 /** Functions to convert to Python objects */
 
 static PyObject* python_int(uint32_t* src, size_t __attribute__((__unused__)) size)
@@ -223,6 +266,7 @@ void init_type_interact(void)
 
 	add_type(IP, T_INT, (type_read_str) read_ip, (type_to_pyobject) python_int, 0, "ip", (type_from_pyobject) c_int);
 	add_type(BOOL, T_BYTE, (type_read_str) read_byte, (type_to_pyobject) python_bool, 0, "bool", (type_from_pyobject) c_bool);
+	add_type(MAC, T_LONG, (type_read_str) read_mac, (type_to_pyobject) python_long, 0, "mac", (type_from_pyobject) c_long);
 }
 
 
