@@ -1,9 +1,34 @@
 C parser module (ccore)
 ===============
 
+<p align="right">
+  Also available at: https://hpcn-uam.github.io/ccore/
+</p>
+
+Installation
+-----
+
+```shell
+git clone https://github.com/hpcn-uam/ccore.git ccore
+cd ccore
+./install.bash 
+```
+
+Authors
+-----
+Developed by members of the [HPCN lab](http://www.hpcn-uam.es) and [Naudit HPCN](http://www.naudit.es)
+
+- [Guillermo Julián](https://github.com/gjulianm)
+- [Eduardo Miravalls](https://github.com/EduardoMiravalls)
+- [Carlos Vega](https://github.com/carlosvega)
+
+Performance
+-----
+![Performance Comparison](https://user-images.githubusercontent.com/1414389/31085274-f84d5970-a796-11e7-8d35-292277b43f3a.png)
+
 Motivation
 -----
-This module was first developed for the project [FERMIN](www.naudit.es/en/fermin/) aiming to improve speed and memory footprint of the reading operations. This reading operations were performed over text files with enriched records obtained from network dissector tools. Afterwards, high level python parsers process their content for multiple and diverse analysis purposes. The examples described in the following document refer to these dissector parsers as the upper objects who make use of the ccore, but we note that this module could be used for any other kind of text file.
+This module was first developed for the project [FERMIN](http://www.naudit.es/en/fermin/) aiming to improve speed and memory footprint of the reading operations. This reading operations were performed over text files with enriched records obtained from network dissector tools. Afterwards, high level python parsers process their content for multiple and diverse analysis purposes. The examples described in the following document refer to these dissector parsers as the upper objects who make use of the ccore, but we note that this module could be used for any other kind of text file.
 
 To improve speed and memory footprint, the dissector parsers can use the C parser module to read from files. This module also provides functions that will improve performance of filtering and timeseries generation.
 
