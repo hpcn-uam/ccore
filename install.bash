@@ -54,5 +54,5 @@ echo "[ Running tests ]"
 py.test
 
 echo "[ Done ]"
-echo "Remember to execute 'source activate-env' to activate the virtualenv"
+echo "Remember to execute 'source .env/bin/activate' to activate the virtualenv"
 
